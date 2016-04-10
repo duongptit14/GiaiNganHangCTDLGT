@@ -1,29 +1,29 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cstdlib>
 
 using namespace std;
 int a[100][100];
-bool Find(string tmp, char c) {
-	for( int i = 0; i<=tmp.length(); i++) {
-		if( tmp[i] == c ) return true;
-	}
-	return false;
-}
+
 int main() {
 	ifstream ifs("DSK.txt", ios::in);
 	int n; 
 	ifs >> n;
-	string tmp;
-	getline(ifs,tmp);
+	char tmp[100];
+	ifs.getline(tmp,1);
 	int i = 1;
 	while(!ifs.eof()) {
-		getline(ifs,tmp);
-		for( int j = 1; j<=n; j++) {
-			char c = (j+48);
-			if( Find(tmp,c) == true ) a[i][j] = 1;
+		ifs.getline(tmp,100);	
+		char *p = strtok(tmp, " ");
+		while(p!=NULL) {
+			string tmp2 = (string)p;
+			int num = atoi(tmp2.c_str());
+			a[i][num]++;
+			p = strtok(NULL, " ");
 		}
 		i++;
+		cout << endl;
 	}
 	ifs.close();
 	ofstream ofs("MTK.txt");
