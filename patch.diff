@@ -1,0 +1,1891 @@
+diff --git a/DATA1.in b/DATA1.in
+new file mode 100644
+index 0000000..e874c02
+--- /dev/null
++++ b/DATA1.in
+@@ -0,0 +1,4 @@
++10007 10009 10801 10901 13831
++10007 10009 10801 10901 34543
++10007 10009 10801 10901 13831
++10007 10009 10801 10901 34543
+diff --git a/DATA2.in b/DATA2.in
+new file mode 100644
+index 0000000..df3d312
+--- /dev/null
++++ b/DATA2.in
+@@ -0,0 +1,2 @@
++AB AC AD AH AK 
++AB AC AD AH AK
+diff --git a/De 15.cpp b/De 15.cpp
+new file mode 100644
+index 0000000..6413967
+--- /dev/null
++++ b/De 15.cpp	
+@@ -0,0 +1,135 @@
++#include<iostream>
++#include<cmath>
++#include<fstream>
++using namespace std;
++	fstream fp1;
++	ofstream fp2;
++	ofstream fp3;
++	ofstream fp4;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp2.open("ketqua1.out");
++	fp3.open("Ketqua2.out");
++	fp4.open("Ketqua3.out");
++}
++typedef struct SO{
++	int so;
++	int solan;
++}SO;
++typedef struct node{
++	SO info;
++	struct node *next;
++}*start;
++void init(start *plist)
++{
++	*plist =NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p=new(struct node);
++	return p;
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL)
++	{
++		return 1;
++	}
++	return 0;
++}
++start insertbottom(start *plist,SO x)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	p->info=x;
++	if(Emptynode(plist))
++	{
++		p->next=NULL;
++		*plist=p;
++		return p;
++	}
++	q=*plist;
++	while(q->next!=NULL)
++	{
++		q=q->next;
++	}
++	q->next=p;
++	p->next=NULL;
++	return p;
++}
++void Searchnode(start *plist,SO x)
++{
++	start p;
++	p=Getnode();
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(p->info.so==x.so)
++		{
++			p->info.solan++;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertbottom(plist,x);
++	}
++}
++int ngto(int n)
++{
++	int i;
++	while(n<2) return 0;
++	for(i=2;i<=sqrt(n);i++)
++	if(n%i==0) return 0;
++	return 1;
++}
++int thuannghich(int n)
++{
++	int dao=0,m=n;
++	while(n>0)
++	{
++		dao=dao*10+n%10;
++		n=n/10;
++	}
++	if(dao==m) return 1;
++	return 0;
++}
++int main()
++{
++	start p;
++	init(&p);
++	taofile();
++	SO x;
++	while(!fp1.eof())
++	{
++		fp1>>x.so;
++		x.solan=1;
++		Searchnode(&p,x);
++	}
++	while(p!=NULL)
++	{
++		if(thuannghich(p->info.so)&&ngto(p->info.so))
++		{
++			fp4<<p->info.so<<" "<<p->info.solan;
++			fp4<<'\n';
++		}
++		else if(thuannghich(p->info.so))
++		{
++			fp3<<p->info.so<<" "<<p->info.solan;
++			fp3<<'\n';
++		}
++		else if(ngto(p->info.so))
++		{
++			fp2<<p->info.so<<" "<<p->info.solan;
++			fp2<<'\n';
++		}
++		p=p->next;
++	}
++	return 0;
++}
+diff --git a/De 31.cpp b/De 31.cpp
+new file mode 100644
+index 0000000..43be093
+--- /dev/null
++++ b/De 31.cpp	
+@@ -0,0 +1,83 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int tong=0;
++	for(int i=1;i<=n;i++)
++	tong+=X[i]*a[i];
++	return tong;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++int main(void)
++{
++	int dem=0;
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra2()==k)
++		{
++			dem++;
++		}
++		tiep();
++	}
++	if(ktra2()==k) dem++;
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	tao();
++	while(!ktra())
++	{
++		if(ktra2()==k)
++		{
++			in();
++		}
++		tiep();
++	}
++	if(ktra2()==k) in();
++	return 0;
++}
+diff --git a/De 32.cpp b/De 32.cpp
+new file mode 100644
+index 0000000..02785bf
+--- /dev/null
++++ b/De 32.cpp	
+@@ -0,0 +1,79 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++int ktra2()
++{
++	int tong=0;
++	for(int i=1;i<=n;i++)
++	tong+=X[i]*a[i];
++	return tong;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++void Try(int i)
++{
++	for(int j=0;j<=1;j++)
++	{
++		X[i]=j;
++		if(i==n)
++		{
++			if(ktra2()==k)
++			{
++				in();
++			}
++		}
++		else Try(i+1);
++	}
++}
++int dem=0;
++void Try1(int i)
++{
++	for(int j=0;j<=1;j++)
++	{
++		X[i]=j;
++		if(i==n)
++		{
++			if(ktra2()==k)
++			{
++				dem++;
++			}
++		}
++		else Try1(i+1);
++	}
++}
++int main(void)
++{
++	taofile();
++	tao();
++	Try1(1);
++	cout<<dem<<'\n';
++	Try(1);
++	return 0;
++}
+diff --git a/De 34.cpp b/De 34.cpp
+new file mode 100644
+index 0000000..f015300
+--- /dev/null
++++ b/De 34.cpp	
+@@ -0,0 +1,118 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int kt=0,kt1=0;
++	for(int i=1;i<=n;i++)
++	{
++		if(X[i]==1)
++		{
++			kt=X[i]*a[i];
++			break;
++		}
++	}
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		if(X[i]*a[i]<kt)
++		{
++			kt1=1;
++			break;
++		}
++		kt=X[i]*a[i];
++	}
++	if(kt1==1) return 0;
++	return 1;
++}
++int ktra3()
++{
++	int dem=0;
++	for(int i=1;i<=n;i++)
++	if(X[i]==1) dem++;
++	if(dem==3) return 1;
++	return 0;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++int main(void)
++{
++	int dem=0;
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++	return 0;
++}
+diff --git a/De 39.cpp b/De 39.cpp
+new file mode 100644
+index 0000000..14f53ac
+--- /dev/null
++++ b/De 39.cpp	
+@@ -0,0 +1,118 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int kt=0,kt1=0;
++	for(int i=1;i<=n;i++)
++	{
++		if(X[i]==1)
++		{
++			kt=X[i]*a[i];
++			break;
++		}
++	}
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		if(X[i]*a[i]>kt)
++		{
++			kt1=1;
++			break;
++		}
++		kt=X[i]*a[i];
++	}
++	if(kt1==1) return 0;
++	return 1;
++}
++int ktra3()
++{
++	int dem=0;
++	for(int i=1;i<=n;i++)
++	if(X[i]==1) dem++;
++	if(dem==3) return 1;
++	return 0;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++int main(void)
++{
++	int dem=0;
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++	return 0;
++}
+diff --git a/De 42.cpp b/De 42.cpp
+new file mode 100644
+index 0000000..15d7e08
+--- /dev/null
++++ b/De 42.cpp	
+@@ -0,0 +1,102 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,b,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>b>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int tong=0;
++	for(int i=1;i<=n;i++)
++	tong+=X[i]*a[i];
++	if(tong==k) return 1;
++	return 0;
++}
++int ktra3()
++{
++	int dem=0;
++	for(int i=1;i<=n;i++)
++	if(X[i]==1) dem++;
++	if(dem==b) return 1;
++	return 0;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==1)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++int main(void)
++{
++	int dem=0;
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			dem++;
++		}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++		tiep();
++	}
++	if(ktra3())
++		{
++			if(ktra2())
++			in();
++		}
++	return 0;
++}
+diff --git a/De 44.cpp b/De 44.cpp
+new file mode 100644
+index 0000000..67b35ab
+--- /dev/null
++++ b/De 44.cpp	
+@@ -0,0 +1,97 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100],b[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++		fp1>>b[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int tong=0;
++	for(int i=1;i<=n;i++)
++	tong+=X[i]*a[i];
++	return tong;
++}
++int ktra3()
++{
++	int dem=0;
++	for(int i=1;i<=n;i++)
++	dem+=X[i]*b[i];
++	if(dem>k) return 0;
++	return 1;
++}
++/*void in()
++{
++	for(int i=1;i<=n;i++)
++	{
++		fp3<<X[i]*a[i]<<" ";
++		cout<<X[i]*a[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}*/
++int main(void)
++{
++	int m=0;
++	int c[100]={0};
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra3())
++		{
++			if(ktra2()>m)
++			{
++				m=ktra2();
++				for(int i=1;i<=n;i++)
++				c[i]=X[i];
++			}
++			
++		}
++		tiep();
++	}
++	if(ktra3())
++		{		m=ktra2();
++				for(int i=1;i<=n;i++)
++				c[i]=X[i];
++		}
++	cout<<m<<'\n';
++	fp3<<m<<'\n';
++	for(int i=1;i<=n;i++)
++	{
++		cout<<c[i]<<" ";
++		fp3<<c[i]<<" ";
++	}
++	return 0;
++}
+diff --git a/De 45.cpp b/De 45.cpp
+new file mode 100644
+index 0000000..70edaf7
+--- /dev/null
++++ b/De 45.cpp	
+@@ -0,0 +1,89 @@
++#include<iostream>
++#include<fstream>
++using namespace std;
++int n,k,a[100],X[100];
++	fstream fp1;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp3.open("ketqua.out");
++}
++void tao()
++{
++	fp1>>n>>k;
++	for(int i=1;i<=n;i++)
++	{
++		fp1>>a[i];
++	}
++	for(int i=1;i<=n;i++)
++	X[i]=0;
++}
++void tiep()
++{
++	int i=n;
++	while(X[i]==1)
++	{
++		X[i]=0;
++		i--;
++	}
++	X[i]=1;
++}
++int ktra()
++{
++	for(int i=1;i<=n;i++)
++	if(X[i]==0) return 0;
++	return 1;
++}
++int ktra2()
++{
++	int tong=0;
++	for(int i=1;i<=n;i++)
++	tong+=X[i]*a[i];
++	return tong;
++}
++void in()
++{
++	for(int i=1;i<=n;i++)
++	{
++		fp3<<X[i]<<" ";
++		cout<<X[i]<<" ";
++	}
++	fp3<<'\n';
++	cout<<'\n';
++}
++int main(void)
++{
++	int dem=0;
++	taofile();
++	tao();
++	while(!ktra())
++	{
++		if(ktra2()==k)
++		{
++			dem++;
++		}
++		tiep();
++	}
++	if(ktra2()==k)
++	{
++		dem++;
++	}
++	cout<<dem<<'\n';
++	fp3<<dem<<'\n';
++	tao();
++	while(!ktra())
++	{
++		if(ktra2()==k)
++		{
++				in();
++		}
++		tiep();
++	}
++	if(ktra2()==k)
++		{
++			in();
++		}
++	
++	return 0;
++}
+diff --git a/De 7.cpp b/De 7.cpp
+new file mode 100644
+index 0000000..60f34c2
+--- /dev/null
++++ b/De 7.cpp	
+@@ -0,0 +1,140 @@
++#include<iostream>
++#include<cstring>
++#include<malloc.h>
++#include<fstream>
++using namespace std;
++using std::cout;
++	fstream fp1;
++	fstream fp2;
++	fstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp2.open("DATA2.in");
++	fp3.open("Ketqua.out");
++}
++typedef struct TU{
++	char tu[100];
++	float solan;
++}TU;
++typedef struct node{
++	TU infor;
++	struct node *next;
++}*start;
++void init(start *plist)
++{
++	*plist=NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p=new(struct node);
++	return p;
++}
++void freenode(start p)
++{
++	free(p);
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL)
++	return 1;
++	return 0;
++}
++start insertbottom(start *plist,TU x)
++{
++	start p,q;
++	p=Getnode();
++	p->infor=x;
++	if(Emptynode(plist))
++	{
++		p->next=NULL;
++		*plist=p;
++		return p;
++	}
++	q=*plist;
++	while(q->next!=NULL)
++	{
++		q=q->next;	
++	}
++	q->next=p;
++	p->next=NULL;
++	return p;
++}
++void searchnode(start *plist,TU x)
++{
++	start p;
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(strcmp(p->infor.tu,x.tu)==0)
++		{
++			p->infor.solan++;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertbottom(plist,x);
++	}
++	
++}
++void display(start *plist,float n)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	if(Emptynode(plist))
++	{
++		fp3<<"Khong co gi hien thi";
++		return;
++	}
++	p=*plist;
++	q=*plist;
++	int dem=0;
++	while(q!=NULL)
++	{
++		dem++;
++		q=q->next;
++	}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	while(p!=NULL)
++	{
++		fp3.precision(0);
++		cout.precision(0);
++		fp3<<p->infor.tu<<" "<<p->infor.solan/n;
++		cout<<p->infor.tu<<" "<<p->infor.solan/n;
++		p=p->next;
++		fp3<<'\n';
++		cout<<'\n';
++	}
++	
++}
++int main(void)
++{
++	start plist;
++	init(&plist);
++	taofile();
++	TU x;
++	float dem=0;
++	while(!fp1.eof())
++	{
++		fp1>>x.tu;
++		x.solan=1;
++		dem++;
++		searchnode(&plist,x);
++	}
++	while(!fp2.eof())
++	{
++		fp2>>x.tu;
++		x.solan=1;
++		dem++;
++		searchnode(&plist,x);
++	}
++	display(&plist,dem);
++	return 0;
++}
+diff --git a/De 8.cpp b/De 8.cpp
+new file mode 100644
+index 0000000..33d0775
+--- /dev/null
++++ b/De 8.cpp	
+@@ -0,0 +1,158 @@
++#include<iostream>
++#include<cstring>
++#include<malloc.h>
++#include<fstream>
++using namespace std;
++	fstream fp1;
++	fstream fp2;
++	fstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp2.open("DATA2.in");
++	fp3.open("Ketqua.out");
++}
++typedef struct TU{
++	char tu[100];
++	float solan;
++}TU;
++typedef struct node{
++	TU infor;
++	struct node *next;
++}*start;
++void init(start *plist)
++{
++	*plist=NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p=new(struct node);
++	return p;
++}
++void freenode(start p)
++{
++	free(p);
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL)
++	return 1;
++	return 0;
++}
++start insertbottom(start *plist,TU x)
++{
++	start p,q;
++	p=Getnode();
++	p->infor=x;
++	if(Emptynode(plist))
++	{
++		p->next=NULL;
++		*plist=p;
++		return p;
++	}
++	q=*plist;
++	while(q->next!=NULL)
++	{
++		q=q->next;	
++	}
++	q->next=p;
++	p->next=NULL;
++}
++void searchnode(start *plist,TU x)
++{
++	start p;
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(strcmp(p->infor.tu,x.tu)==0)
++		{
++			p->infor.solan++;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertbottom(plist,x);
++	}
++	
++}
++void searchnode1(start *plist,TU x)
++{
++	start p;
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(strcmp(p->infor.tu,x.tu)==0)
++		{
++			p->infor.solan=-1;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++	
++}
++void display(start *plist,float n)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	if(Emptynode(plist))
++	{
++		fp3<<"Khong co gi hien thi";
++		return;
++	}
++	p=*plist;
++	q=*plist;
++	int dem=0;
++	while(q!=NULL)
++	{
++		if(q->infor.solan!=-1)
++		dem++;
++		q=q->next;
++	}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	while(p!=NULL)
++	{
++		if(p->infor.solan!=-1)
++		{
++		
++		fp3<<p->infor.tu<<" "<<p->infor.solan/n;
++		cout<<p->infor.tu<<" "<<p->infor.solan/n;
++		
++		fp3<<'\n';
++		cout<<'\n';}
++		p=p->next;
++	}
++	
++}
++int main(void)
++{
++	start plist;
++	init(&plist);
++	taofile();
++	TU x;
++	float dem=0;
++	while(!fp1.eof())
++	{
++		fp1>>x.tu;
++		x.solan=1;
++		dem++;
++		searchnode(&plist,x);
++	}
++	while(!fp2.eof())
++	{
++		fp2>>x.tu;
++		x.solan=1;
++		dem++;
++		searchnode1(&plist,x);
++	}
++	display(&plist,dem);
++	return 0;
++}
+diff --git a/De 9.cpp b/De 9.cpp
+new file mode 100644
+index 0000000..3556676
+--- /dev/null
++++ b/De 9.cpp	
+@@ -0,0 +1,163 @@
++#include<iostream>
++#include<cstring>
++#include<malloc.h>
++#include<fstream>
++using namespace std;
++	fstream fp1;
++	fstream fp2;
++	ofstream fp3;
++void taofile()
++{
++	fp1.open("DATA1.in");
++	fp2.open("DATA2.in");
++	fp3.open("Ketqua.out");
++}
++typedef struct TU{
++	char tu[100];
++	float solan;
++	int xhien;
++}TU;
++typedef struct node{
++	TU infor;
++	struct node *next;
++}*start;
++void init(start *plist)
++{
++	*plist=NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p=new(struct node);
++	return p;
++}
++void freenode(start p)
++{
++	free(p);
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL)
++	return 1;
++	return 0;
++}
++start insertbottom(start *plist,TU x)
++{
++	start p,q;
++	p=Getnode();
++	p->infor=x;
++	if(Emptynode(plist))
++	{
++		p->next=NULL;
++		*plist=p;
++		return p;
++	}
++	q=*plist;
++	while(q->next!=NULL)
++	{
++		q=q->next;	
++	}
++	q->next=p;
++	p->next=NULL;
++}
++void searchnode(start *plist,TU x)
++{
++	start p;
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(strcmp(p->infor.tu,x.tu)==0)
++		{
++			p->infor.solan++;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertbottom(plist,x);
++	}
++	
++}
++void searchnode1(start *plist,TU x)
++{
++	start p;
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(strcmp(p->infor.tu,x.tu)==0)
++		{
++			p->infor.solan++;
++			p->infor.xhien=1;
++			kt=1;
++			break;
++		}
++		p=p->next;
++	}
++
++	
++}
++void display(start *plist,float n)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	if(Emptynode(plist))
++	{
++		fp3<<"Khong co gi hien thi";
++		return;
++	}
++	p=*plist;
++	q=*plist;
++	int dem=0;
++	while(q!=NULL)
++	{
++		if(q->infor.xhien==1)
++		dem++;
++		q=q->next;
++	}
++	fp3<<dem<<'\n';
++	cout<<dem<<'\n';
++	while(p!=NULL)
++	{
++		if(p->infor.xhien==1)
++		{
++		
++		fp3<<p->infor.tu<<" "<<p->infor.solan/n;
++		cout<<p->infor.tu<<" "<<p->infor.solan/n;
++		
++		fp3<<'\n';
++		cout<<'\n';}
++		p=p->next;
++	}
++	
++}
++int main(void)
++{
++	start plist;
++	init(&plist);
++	taofile();
++	TU x;
++	float dem=0;
++	while(!fp1.eof())
++	{
++		fp1>>x.tu;
++		x.solan=1;
++		x.xhien=0;
++		dem++;
++		searchnode(&plist,x);
++	}
++	while(!fp2.eof())
++	{
++		fp2>>x.tu;
++		x.solan=1;
++		x.xhien=0;
++		dem++;
++		searchnode1(&plist,x);
++	}
++	display(&plist,dem);
++	return 0;
++}
+diff --git a/Ketqua.out b/Ketqua.out
+new file mode 100644
+index 0000000..156577a
+--- /dev/null
++++ b/Ketqua.out
+@@ -0,0 +1,8 @@
++7
++AB 0.2
++AC 0.2
++AD 0.2
++AE 0.09
++AF 0.1
++AH 0.09
++AK 0.1
+diff --git a/Ketqua2.out b/Ketqua2.out
+new file mode 100644
+index 0000000..6de2698
+--- /dev/null
++++ b/Ketqua2.out
+@@ -0,0 +1,2 @@
++10801 4
++10901 4
+diff --git a/Ketqua3.out b/Ketqua3.out
+new file mode 100644
+index 0000000..303b37f
+--- /dev/null
++++ b/Ketqua3.out
+@@ -0,0 +1,2 @@
++13831 2
++34543 3
+diff --git a/ThuDSLKK.cpp b/ThuDSLKK.cpp
+new file mode 100644
+index 0000000..5166556
+--- /dev/null
++++ b/ThuDSLKK.cpp
+@@ -0,0 +1,160 @@
++#include<iostream>
++using namespace std;
++typedef struct TU{
++	string tu;
++	int solan;
++}TU;
++typedef struct node{
++	TU info;
++	struct node *next;
++	struct node *prew;
++}*start;
++void init(start *plist)
++{
++	*plist=NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p=new(struct node);
++	return p;
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL) return 1;
++	return 0;
++}
++int possion(start *plist,TU x)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	p->info=x;
++	if(Emptynode(plist))
++	{
++		return -1;
++	}
++	q=*plist;
++	if(p->info.tu<q->info.tu)
++	{
++		return 0;
++	}
++	int dem=0;
++	while(p->info.tu>q->info.tu)
++	{
++		dem++;
++		q=q->next;
++		if(q==NULL)
++		{
++			break;
++		}
++	}
++	return dem;
++}
++start insertnode(start *plist,TU x)
++{
++	int pos=possion(plist,x);
++	start p,q,r;
++	p=Getnode();
++	q=Getnode();
++	r=Getnode();
++	p->info=x;
++	if(pos==-1)
++	{
++		p->next=NULL;
++		p->prew=NULL;
++		*plist=p;
++		return p;
++	}
++	else if(pos==0)
++	{
++		p->next=*plist;
++		p->prew=NULL;
++		*plist=p;
++		return p;
++	}
++	else
++	{
++		cout<<pos<<'\n';
++		q=*plist;
++		int dem=0,kt=0;
++		while(dem<pos)
++		{
++			dem++;
++			r=q;
++			q=q->next;
++			if(q==NULL)
++			{
++				kt=1;
++				break;
++			}
++		}
++		if(kt==1)
++		{
++			r->next=p;
++			p->next=NULL;
++			p->prew=r;
++			return p;
++		}
++		else
++		{
++		
++		p->next=r->next;
++		p->next->prew=p;
++		p->prew=r;
++		r->next=p;
++		return p;}
++	}
++}
++void searchnode(start *plist,TU x)
++{
++	start p;
++	p=Getnode();
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(p->info.tu==x.tu)
++		{
++			kt=1;
++			p->info.solan++;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertnode(plist,x);
++	}
++}
++void display(start *plist)
++{
++	start p;
++	p=Getnode();
++	p=*plist;
++	while(p!=NULL)
++	{
++		cout<<p->info.tu<<" "<<p->info.solan<<'\n';
++		p=p->next;
++	}
++	cout<<'\n';
++}
++int main(void)
++{
++	start p;
++	init(&p);
++	TU x;
++	int i=1;
++	while(i!=0)
++	{
++		cout<<"Nhap vao tu"<<'\n';
++		cin>>x.tu;
++		x.solan=1;
++		searchnode(&p,x);
++		cout<<"Muon nhap tiep ko"<<'\n';
++		cin>>i;
++		if(i==0) break;
++	}
++	display(&p);
++	return 0;
++}
+diff --git a/Thunganxep.cpp b/Thunganxep.cpp
+new file mode 100644
+index 0000000..30573bf
+--- /dev/null
++++ b/Thunganxep.cpp
+@@ -0,0 +1,148 @@
++#include<iostream>
++#include<malloc.h>
++#include<cstring>
++using namespace std;
++typedef struct node{
++	char so;
++	struct node *next;
++}*Stack;
++void init(Stack *plist)
++{
++	*plist=NULL;
++}
++Stack Getnode(void)
++{
++	Stack p;
++	p=new(struct node);
++	return p;
++}
++int Emptynode(Stack *plist)
++{
++	if(*plist==NULL)
++	{
++		return 1;
++	}
++	return 0;
++}
++void Freenode(Stack p)
++{
++	free(p);
++}
++void push(Stack *plist,char x)
++{
++	Stack p;
++	p=Getnode();
++	p->so=x;
++	if(Emptynode(plist))
++	{
++		*plist=p;
++		p->next=NULL;
++			
++	}
++	else
++	{
++	p->next=*plist;
++	*plist=p;
++	}
++}
++char pop(Stack *plist)
++{
++	Stack p;
++	char x[2];
++	p=Getnode();
++	p=*plist;
++	if(Emptynode(plist))
++	{
++		return ' ';
++	}
++	*plist=p->next;
++	x[1]=p->so;
++	p->next=NULL;
++	free(p);
++	return x[1];
++}
++char Get(Stack *plist)
++{
++	Stack p;
++	char x[2];
++	p=Getnode();
++	p=*plist;
++	if(Emptynode(plist))
++	{
++		return ' ';
++	}
++	x[1]=p->so;
++	return x[1];
++}
++void display(Stack *plist)
++{
++	Stack p;
++	p=Getnode();
++	p=*plist;
++	while(p!=NULL)
++	{
++		cout<<p->so<<" ";
++		p=p->next;
++	}
++	cout<<'\n';
++}
++int priority(char x)
++{
++	if(x=='+'||x=='-') return 1;
++	if(x=='*'||x=='/') return 2;
++}
++int main(void)
++{
++	Stack p,q,r;
++	init(&p);
++	init(&q);
++	char x[100];
++	cin>>x;
++	int n=strlen(x);
++	char y;
++	for(int i=0;i<n;i++)
++	{
++		if(x[i]=='(')
++		{
++			push(&p,x[i]);
++		}
++		else if(x[i]=='+'||x[i]=='-'||x[i]=='*'||x[i]=='/')
++		{
++			y=Get(&p);
++			if(y==' ')
++			{
++				push(&p,x[i]);
++			}
++			else if(priority(x[i])>=priority(y))
++			{
++				push(&p,x[i]);
++			}
++			else if(priority(x[i])<priority(y))
++			{
++				y=pop(&p);
++				push(&q,y);
++				push(&p,x[i]);
++			}
++		}
++		else if(x[i]==')')
++		{
++			 y= pop(&p);
++			while(y!='(')
++			{
++				push(&q,y);
++				y=pop(&p);
++			}
++		}
++		else
++		{
++			push(&q,x[i]);
++		}
++	}
++	while(p!=NULL)
++	{
++		y=pop(&p);
++		push(&q,y);
++	}
++	display(&q);
++	return 0;
++}
+diff --git a/ketqua1.out b/ketqua1.out
+new file mode 100644
+index 0000000..244609e
+--- /dev/null
++++ b/ketqua1.out
+@@ -0,0 +1,2 @@
++10007 4
++10009 4
+diff --git a/trenlop2.cpp b/trenlop2.cpp
+new file mode 100644
+index 0000000..1af1074
+--- /dev/null
++++ b/trenlop2.cpp
+@@ -0,0 +1,161 @@
++#include<iostream>
++#include<string>
++using namespace std;
++typedef struct TU{
++	string tu;
++	int solan;
++}TU;
++typedef struct node{
++	TU infor;
++	struct node *next;
++	struct node *prew;
++
++}*start;
++void init(start *plist)
++{
++	*plist=NULL;
++}
++start Getnode(void)
++{
++	start p;
++	p= new(struct node);
++	return p;
++}
++int Emptynode(start *plist)
++{
++	if(*plist==NULL) return 1;
++	return 0;
++}
++int possion(start *plist,TU x)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	if(Emptynode(plist))
++	{
++		return 0;
++	}
++	p=*plist;
++	int dem=0;
++	while(p!=NULL)
++	{
++		dem++;
++		if(p->infor.tu>x.tu)
++		{
++			return dem;
++		}
++		p=p->next;
++	}
++	
++	return dem+1;
++	
++}
++start insertpos(start *plist,TU x)
++{
++	start p,q,r;
++	p=Getnode();
++	q=Getnode();
++	r=Getnode();
++	p->infor=x;
++	if(Emptynode(plist))
++	{
++		*plist=p;
++		p->next=NULL;
++		p->prew=NULL;
++		return p;
++	}
++	q=*plist;
++	if(possion(plist,x)==1)
++	{
++		p->next=*plist;
++		p->prew=NULL;
++		*plist=p;
++		return p;
++	}
++	int t=possion(plist,x),dem=0;
++	while(q!=NULL)
++	{
++		dem++;
++		r=q;
++		q=q->next;
++	}
++	
++	if(t>dem)
++	{
++		r->next=p;
++		p->prew=r;
++		p->next=NULL;
++		return p;
++	}
++	q=*plist;
++	for(int i=1;i<t;i++)
++	{
++		r=q;
++		q=q->next;
++	}
++	p->next=r->next;
++	p->next->prew=p;
++	r->next=p;
++	p->prew=r;
++	return p;
++	
++}
++void searchnode(start *plist,TU x)
++{
++	start p;
++	p=Getnode();
++	p=*plist;
++	int kt=0;
++	while(p!=NULL)
++	{
++		if(p->infor.tu==x.tu)
++		{
++			kt=1;
++			p->infor.solan++;
++			break;
++		}
++		p=p->next;
++	}
++	if(kt==0)
++	{
++		insertpos(plist,x);
++	}
++}
++void display(start *plist)
++{
++	start p,q;
++	p=Getnode();
++	q=Getnode();
++	p=*plist;
++	q=*plist;
++	int dem=0;
++	while(q!=NULL)
++	{
++		dem++;
++		q=q->next;
++	}
++	cout<<dem<<'\n';
++	while(p!=NULL)
++	{
++		cout<<p->infor.tu<<" "<<p->infor.solan<<'\n';
++		p=p->next;
++	}
++}
++int main(void)
++{
++	start plist;
++	init(&plist);
++	TU x;
++	int i=0;
++	while(i!=1)
++	{
++		cin>>x.tu;
++		x.solan=1;
++		searchnode(&plist,x);
++		cout<<"Ban co muon nhap nua ko"<<'\n';
++		cin>>i;
++		if(i==1) break;
++	}
++	display(&plist);
++	return 0;
++}
